@@ -1,9 +1,11 @@
 import { YouTubeConverter } from '@/components/youtube-converter';
 import { HeroSection } from '@/components/hero-section';
+import { Analytics } from '@vercel/analytics/next';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+      <Analytics />
       <HeroSection />
       
       {/* Main Converter Section */}
