@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
+import { getServerStripe } from '@/lib/stripe';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const stripe = getServerStripe();
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
               name: `${format.toUpperCase()} Download - ${videoInfo.title}`,
               description: `Download ${videoInfo.title} as ${format.toUpperCase()}${format === 'mp4' ? ` (${quality})` : ''}`,
             },
-            unit_amount: 49, // $0.49 in cents
+            unit_amount: 50, // $0.50 in cents
           },
           quantity: 1,
         },
