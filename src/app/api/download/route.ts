@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getVideoStream, getAudioStream } from '@/lib/youtube';
-import { stripe } from '@/lib/stripe';
+import { getServerStripe } from '@/lib/stripe';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,6 +14,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const stripe = getServerStripe();
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     
     if (session.payment_status !== 'paid') {
