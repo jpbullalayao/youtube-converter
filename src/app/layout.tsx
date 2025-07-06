@@ -13,18 +13,18 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "YouTube to MP4 & MP3 Converter - Fast & Secure Downloads",
+  title: "YouTube to MP4 & MP3 Converter - Fast & Easy Downloads",
   description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.50 per download.",
   keywords: "youtube to mp4, youtube to mp3, youtube converter, video downloader, audio converter, youtube download",
   openGraph: {
-    title: "YouTube to MP4 & MP3 Converter - Fast & Secure Downloads",
+    title: "YouTube to MP4 & MP3 Converter - Fast & Easy Downloads",
     description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.50 per download.",
     type: "website",
-    url: "https://youtube-converter.com",
+    url: "https://youtube-converter-tan.vercel.app",
   },
   twitter: {
     card: "summary_large_image",
-    title: "YouTube to MP4 & MP3 Converter - Fast & Secure Downloads",
+    title: "YouTube to MP4 & MP3 Converter - Fast & Easy Downloads",
     description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.50 per download.",
   },
   robots: {
@@ -41,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="canonical" href="https://youtube-converter.com" />
+        <link rel="canonical" href="https://youtube-converter-tan.vercel.app" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -50,12 +50,12 @@ export default function RootLayout({
               '@type': 'WebApplication',
               name: 'YouTube to MP4 & MP3 Converter',
               description: 'Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout.',
-              url: 'https://youtube-converter.com',
+              url: 'https://youtube-converter-tan.vercel.app',
               applicationCategory: 'MultimediaApplication',
               operatingSystem: 'Web Browser',
               offers: {
                 '@type': 'Offer',
-                price: '0.49',
+                price: '0.50',
                 priceCurrency: 'USD',
               },
             }),
