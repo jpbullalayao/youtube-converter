@@ -21,7 +21,7 @@ export default function Home() {
               Why Choose Our Converter?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We provide the fastest, most secure, and reliable YouTube conversion service available.
+              We provide the fastest, and most reliable YouTube video conversion service available.
             </p>
           </div>
           
@@ -35,7 +35,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Lightning Fast</h3>
               <p className="text-gray-600">
-                Convert and download your videos in seconds, not minutes. Our optimized servers ensure maximum speed.
+                Convert and download YouTube videos fast. Our optimized servers ensure maximum speed.
               </p>
             </div>
             
@@ -46,9 +46,9 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">100% Secure</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Convenient</h3>
               <p className="text-gray-600">
-                Your payments are processed through Stripe&apos;s secure infrastructure. We never store your personal data.
+                No ads, pop-ups, or weird links that lead to malware. You get what you came here for. 
               </p>
             </div>
             
