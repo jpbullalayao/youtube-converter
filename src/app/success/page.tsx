@@ -3,6 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+import { Analytics } from '@vercel/analytics/next';
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -25,6 +26,7 @@ function SuccessContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <Analytics />
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-8 text-center">
           <div className="mb-6">
