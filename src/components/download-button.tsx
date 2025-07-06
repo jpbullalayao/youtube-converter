@@ -73,9 +73,21 @@ export const DownloadButton = ({ videoInfo, format, quality, url }: DownloadButt
       <button
         onClick={handleDownload}
         disabled={isLoading}
-        className="w-full bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+        className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white py-4 px-8 rounded-2xl font-bold text-lg transition-all duration-200 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg"
       >
-        {isLoading ? 'Creating Checkout...' : `Download ${format.toUpperCase()} ${format === 'mp4' ? `(${quality})` : ''} - $0.49`}
+        {isLoading ? (
+          <div className="flex items-center justify-center gap-2">
+            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            Creating Checkout...
+          </div>
+        ) : (
+          <div className="flex items-center justify-center gap-2">
+            <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Download {format.toUpperCase()} {format === 'mp4' ? `(${quality})` : ''} - $0.50
+          </div>
+        )}
       </button>
     </div>
   );

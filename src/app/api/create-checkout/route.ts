@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
               name: `${format.toUpperCase()} Download - ${videoInfo.title}`,
               description: `Download ${videoInfo.title} as ${format.toUpperCase()}${format === 'mp4' ? ` (${quality})` : ''}`,
             },
-            unit_amount: 49, // $0.49 in cents
+            unit_amount: 50, // $0.50 in cents
           },
           quantity: 1,
         },

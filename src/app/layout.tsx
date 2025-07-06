@@ -14,18 +14,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "YouTube to MP4 & MP3 Converter - Fast & Secure Downloads",
-  description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.49 per download.",
+  description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.50 per download.",
   keywords: "youtube to mp4, youtube to mp3, youtube converter, video downloader, audio converter, youtube download",
   openGraph: {
     title: "YouTube to MP4 & MP3 Converter - Fast & Secure Downloads",
-    description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.49 per download.",
+    description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.50 per download.",
     type: "website",
     url: "https://youtube-converter.com",
   },
   twitter: {
     card: "summary_large_image",
     title: "YouTube to MP4 & MP3 Converter - Fast & Secure Downloads",
-    description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.49 per download.",
+    description: "Convert YouTube videos to MP4 or MP3 instantly. High-quality downloads in 360p, 480p, 720p, 1080p. No ads, no popups, secure checkout. Only $0.50 per download.",
   },
   robots: {
     index: true,
