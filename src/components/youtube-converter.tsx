@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { QualitySelector } from './quality-selector';
 import { DownloadButton } from './download-button';
+import { ClientTokenManager } from '@/lib/client-token-manager';
 
 interface VideoInfo {
   title: string;
@@ -30,23 +31,77 @@ export const YouTubeConverter = () => {
 
     setIsLoading(true);
     try {
+      // Generate client tokens before making the request
+      console.log('Generating client tokens for YouTube request...');
+      let clientTokens;
+      try {
+        clientTokens = await ClientTokenManager.getTokens();
+        console.log('Client tokens generated successfully');
+      } catch (tokenError) {
+        console.warn('Failed to generate client tokens, proceeding without them:', tokenError);
+        clientTokens = undefined;
+      }
+
       const response = await fetch('/api/validate-youtube', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url, clientTokens }),
       });
 
       const data = await response.json();
       
       if (!response.ok) {
+        // If we get bot detection error and we used client tokens, try refreshing them
+        if (data.error?.includes('bot detection') && clientTokens) {
+          console.log('Bot detection detected, refreshing client tokens and retrying...');
+          try {
+            const refreshedTokens = await ClientTokenManager.refreshTokens();
+            const retryResponse = await fetch('/api/validate-youtube', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ url, clientTokens: refreshedTokens }),
+            });
+            
+            const retryData = await retryResponse.json();
+            if (retryResponse.ok) {
+              setVideoInfo(retryData);
+              return;
+            }
+          } catch (retryError) {
+            console.error('Retry with refreshed tokens failed:', retryError);
+          }
+        }
+        
         throw new Error(data.error || 'Failed to validate URL');
       }
 
       setVideoInfo(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('YouTube validation error:', err);
+      
+      // Enhanced error handling with specific messages
+      if (err instanceof Error) {
+        if (err.message.includes('bot detection')) {
+          setError('YouTube is temporarily blocking requests. Please try again in a few moments, or try a different video.');
+        } else if (err.message.includes('restricted') || err.message.includes('private')) {
+          setError('This video is private or restricted. Please try a different video.');
+        } else if (err.message.includes('not found') || err.message.includes('404')) {
+          setError('Video not found. Please check the URL and try again.');
+        } else if (err.message.includes('Invalid YouTube URL')) {
+          setError('Please enter a valid YouTube URL.');
+        } else {
+          setError(err.message);
+        }
+      } else {
+        setError('An unexpected error occurred. Please try again.');
+      }
+      
+      // Clear any existing video info on error
+      setVideoInfo(null);
     } finally {
       setIsLoading(false);
     }

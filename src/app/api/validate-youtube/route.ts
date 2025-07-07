@@ -4,7 +4,7 @@ import { formatDuration } from '@/lib/utils';
 
 export async function POST(request: NextRequest) {
   try {
-    const { url } = await request.json();
+    const { url, clientTokens } = await request.json();
 
     if (!url) {
       return NextResponse.json(
@@ -38,10 +38,12 @@ export async function POST(request: NextRequest) {
         nodeEnv: process.env.NODE_ENV,
         isVercel: !!process.env.VERCEL,
         vercelEnv: process.env.VERCEL_ENV,
-        userAgent: process.env.VERCEL_URL ? 'Vercel Environment' : 'Local Environment'
+        userAgent: process.env.VERCEL_URL ? 'Vercel Environment' : 'Local Environment',
+        hasClientTokens: !!clientTokens
       });
       
-      const videoInfo = await getVideoInfo(cleanUrl);
+      // Pass client tokens to the video info function
+      const videoInfo = await getVideoInfo(cleanUrl, clientTokens);
       console.log('Video info fetched successfully:', {
         title: videoInfo.title,
         videoId: videoInfo.videoId,

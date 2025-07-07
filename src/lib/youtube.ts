@@ -76,7 +76,7 @@ const retryWithBackoff = async <T>(
   throw lastError!;
 };
 
-export const getVideoInfo = async (url: string) => {
+export const getVideoInfo = async (url: string, clientTokens?: { visitorData?: string }) => {
   try {
     console.log('youtubei.js getBasicInfo called with URL:', url);
     
@@ -88,22 +88,35 @@ export const getVideoInfo = async (url: string) => {
     
     console.log('Creating Innertube instance...');
     
-    // Get tokens for bot detection bypass
+    // Use client-provided tokens or fallback to server-side generation
     let tokens;
-    try {
-      tokens = await retryWithBackoff(async () => {
-        return await tokenManager.getTokens();
-      });
-      
-      console.log('Using tokens:', {
+    if (clientTokens?.visitorData) {
+      console.log('Using client-provided tokens');
+      tokens = {
+        visitorData: clientTokens.visitorData,
+        poToken: undefined
+      };
+      console.log('Client tokens:', {
         hasVisitorData: !!tokens.visitorData,
-        hasPoToken: !!tokens.poToken,
-        visitorDataLength: tokens.visitorData?.length || 0,
-        poTokenLength: tokens.poToken?.length || 0
+        visitorDataLength: tokens.visitorData?.length || 0
       });
-    } catch (tokenError) {
-      console.error('Failed to generate tokens, proceeding without them:', tokenError);
-      tokens = { visitorData: undefined, poToken: undefined };
+    } else {
+      console.log('No client tokens provided, using server-side generation');
+      try {
+        tokens = await retryWithBackoff(async () => {
+          return await tokenManager.getTokens();
+        });
+        
+        console.log('Using server tokens:', {
+          hasVisitorData: !!tokens.visitorData,
+          hasPoToken: !!tokens.poToken,
+          visitorDataLength: tokens.visitorData?.length || 0,
+          poTokenLength: tokens.poToken?.length || 0
+        });
+      } catch (tokenError) {
+        console.error('Failed to generate server tokens, proceeding without them:', tokenError);
+        tokens = { visitorData: undefined, poToken: undefined };
+      }
     }
 
     // Create Innertube instance with enhanced configuration for Vercel
@@ -111,7 +124,7 @@ export const getVideoInfo = async (url: string) => {
       const config: Record<string, unknown> = {
         visitor_data: tokens.visitorData,
         enable_session_cache: false,
-        // Add custom user agent to bypass bot detection
+        // Add custom user agent and headers to better simulate browser
         user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
       };
       
@@ -164,7 +177,7 @@ export const getVideoInfo = async (url: string) => {
   }
 };
 
-export const getVideoStream = async (url: string, quality?: string) => {
+export const getVideoStream = async (url: string, quality?: string, clientTokens?: { visitorData?: string }) => {
   try {
     const videoId = extractVideoId(url);
     if (!videoId) {
@@ -172,13 +185,17 @@ export const getVideoStream = async (url: string, quality?: string) => {
     }
     
     let tokens;
-    try {
-      tokens = await retryWithBackoff(async () => {
-        return await tokenManager.getTokens();
-      });
-    } catch (tokenError) {
-      console.error('Failed to generate tokens, proceeding without them:', tokenError);
-      tokens = { visitorData: undefined, poToken: undefined };
+    if (clientTokens?.visitorData) {
+      tokens = { visitorData: clientTokens.visitorData, poToken: undefined };
+    } else {
+      try {
+        tokens = await retryWithBackoff(async () => {
+          return await tokenManager.getTokens();
+        });
+      } catch (tokenError) {
+        console.error('Failed to generate tokens, proceeding without them:', tokenError);
+        tokens = { visitorData: undefined, poToken: undefined };
+      }
     }
 
     const innertube = await retryWithBackoff(async () => {
@@ -216,7 +233,7 @@ export const getVideoStream = async (url: string, quality?: string) => {
   }
 };
 
-export const getAudioStream = async (url: string) => {
+export const getAudioStream = async (url: string, clientTokens?: { visitorData?: string }) => {
   try {
     const videoId = extractVideoId(url);
     if (!videoId) {
@@ -224,13 +241,17 @@ export const getAudioStream = async (url: string) => {
     }
     
     let tokens;
-    try {
-      tokens = await retryWithBackoff(async () => {
-        return await tokenManager.getTokens();
-      });
-    } catch (tokenError) {
-      console.error('Failed to generate tokens, proceeding without them:', tokenError);
-      tokens = { visitorData: undefined, poToken: undefined };
+    if (clientTokens?.visitorData) {
+      tokens = { visitorData: clientTokens.visitorData, poToken: undefined };
+    } else {
+      try {
+        tokens = await retryWithBackoff(async () => {
+          return await tokenManager.getTokens();
+        });
+      } catch (tokenError) {
+        console.error('Failed to generate tokens, proceeding without them:', tokenError);
+        tokens = { visitorData: undefined, poToken: undefined };
+      }
     }
 
     const innertube = await retryWithBackoff(async () => {
