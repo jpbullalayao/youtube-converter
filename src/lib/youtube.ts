@@ -92,16 +92,8 @@ export const getVideoInfo = async (url: string) => {
       return await Innertube.create({
         visitor_data: undefined,
         enable_session_cache: false,
-        // Add custom user agent and headers to bypass bot detection
-        session: {
-          context: {
-            client: {
-              clientName: 'WEB',
-              clientVersion: '2.20240304.00.00',
-              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-            }
-          }
-        }
+        // Add custom user agent to bypass bot detection
+        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
       });
     });
     
@@ -150,15 +142,7 @@ export const getVideoStream = async (url: string, quality?: string) => {
       return await Innertube.create({
         visitor_data: undefined,
         enable_session_cache: false,
-        session: {
-          context: {
-            client: {
-              clientName: 'WEB',
-              clientVersion: '2.20240304.00.00',
-              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-            }
-          }
-        }
+        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
       });
     });
     
@@ -194,15 +178,7 @@ export const getAudioStream = async (url: string) => {
       return await Innertube.create({
         visitor_data: undefined,
         enable_session_cache: false,
-        session: {
-          context: {
-            client: {
-              clientName: 'WEB',
-              clientVersion: '2.20240304.00.00',
-              userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-            }
-          }
-        }
+        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
       });
     });
     
