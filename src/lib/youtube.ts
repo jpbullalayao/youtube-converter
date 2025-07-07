@@ -1,4 +1,5 @@
 import { Innertube } from 'youtubei.js';
+import { tokenManager } from './token-manager';
 
 export const extractVideoId = (url: string): string | null => {
   try {
@@ -87,14 +88,39 @@ export const getVideoInfo = async (url: string) => {
     
     console.log('Creating Innertube instance...');
     
+    // Get tokens for bot detection bypass
+    let tokens;
+    try {
+      tokens = await retryWithBackoff(async () => {
+        return await tokenManager.getTokens();
+      });
+      
+      console.log('Using tokens:', {
+        hasVisitorData: !!tokens.visitorData,
+        hasPoToken: !!tokens.poToken,
+        visitorDataLength: tokens.visitorData?.length || 0,
+        poTokenLength: tokens.poToken?.length || 0
+      });
+    } catch (tokenError) {
+      console.error('Failed to generate tokens, proceeding without them:', tokenError);
+      tokens = { visitorData: undefined, poToken: undefined };
+    }
+
     // Create Innertube instance with enhanced configuration for Vercel
     const innertube = await retryWithBackoff(async () => {
-      return await Innertube.create({
-        visitor_data: undefined,
+      const config: Record<string, unknown> = {
+        visitor_data: tokens.visitorData,
         enable_session_cache: false,
         // Add custom user agent to bypass bot detection
         user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-      });
+      };
+      
+      // Only add po_token if it's not empty
+      if (tokens.poToken && tokens.poToken.length > 0) {
+        config.po_token = tokens.poToken;
+      }
+      
+      return await Innertube.create(config);
     });
     
     console.log('Making getBasicInfo request for video ID:', videoId);
@@ -105,6 +131,13 @@ export const getVideoInfo = async (url: string) => {
       
       // Validate that we actually got meaningful data
       if (!result.basic_info || (!result.basic_info.title && !result.basic_info.short_description)) {
+        // Try refreshing tokens on first failure
+        console.log('Empty video info detected, attempting token refresh...');
+        try {
+          await tokenManager.refreshTokens();
+        } catch (refreshError) {
+          console.error('Token refresh failed:', refreshError);
+        }
         throw new Error('YouTube returned empty video info - likely blocked by bot detection');
       }
       
@@ -138,12 +171,28 @@ export const getVideoStream = async (url: string, quality?: string) => {
       throw new Error('Could not extract video ID from URL');
     }
     
+    let tokens;
+    try {
+      tokens = await retryWithBackoff(async () => {
+        return await tokenManager.getTokens();
+      });
+    } catch (tokenError) {
+      console.error('Failed to generate tokens, proceeding without them:', tokenError);
+      tokens = { visitorData: undefined, poToken: undefined };
+    }
+
     const innertube = await retryWithBackoff(async () => {
-      return await Innertube.create({
-        visitor_data: undefined,
+      const config: Record<string, unknown> = {
+        visitor_data: tokens.visitorData,
         enable_session_cache: false,
         user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-      });
+      };
+      
+      if (tokens.poToken && tokens.poToken.length > 0) {
+        config.po_token = tokens.poToken;
+      }
+      
+      return await Innertube.create(config);
     });
     
     const info = await retryWithBackoff(async () => {
@@ -174,12 +223,28 @@ export const getAudioStream = async (url: string) => {
       throw new Error('Could not extract video ID from URL');
     }
     
+    let tokens;
+    try {
+      tokens = await retryWithBackoff(async () => {
+        return await tokenManager.getTokens();
+      });
+    } catch (tokenError) {
+      console.error('Failed to generate tokens, proceeding without them:', tokenError);
+      tokens = { visitorData: undefined, poToken: undefined };
+    }
+
     const innertube = await retryWithBackoff(async () => {
-      return await Innertube.create({
-        visitor_data: undefined,
+      const config: Record<string, unknown> = {
+        visitor_data: tokens.visitorData,
         enable_session_cache: false,
         user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
-      });
+      };
+      
+      if (tokens.poToken && tokens.poToken.length > 0) {
+        config.po_token = tokens.poToken;
+      }
+      
+      return await Innertube.create(config);
     });
     
     const info = await retryWithBackoff(async () => {
