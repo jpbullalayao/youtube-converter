@@ -7,5 +7,12 @@
       "maxDuration": 60
     }
   },
+  "env": {
+    "PROXY_SERVICE_1_ENABLED": "@proxy_service_1_enabled",
+    "PROXY_SERVICE_1_LIST": "@proxy_service_1_list",
+    "PROXY_SERVICE_2_ENABLED": "@proxy_service_2_enabled",
+    "PROXY_SERVICE_2_LIST": "@proxy_service_2_list",
+    "FREE_PROXY_ENABLED": "@free_proxy_enabled"
+  },
   "crons": []
 }

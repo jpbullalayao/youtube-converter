@@ -20,7 +20,11 @@ class TokenManager {
   private async generateVisitorData(): Promise<string> {
     try {
       console.log('Generating visitor data...');
-      const response = await fetch('https://www.youtube.com/youtubei/v1/visitor_id?key=AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8', {
+      
+      // Import proxy fetch dynamically to avoid issues in browser environment
+      const { fetchYouTube } = await import('./proxy-fetch');
+      
+      const response = await fetchYouTube('https://www.youtube.com/youtubei/v1/visitor_id?key=AIzaSyDCU8hByM-4DrUqRUYnGn-3llEO78bcxq8', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

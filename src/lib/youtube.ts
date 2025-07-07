@@ -1,5 +1,6 @@
-import { Innertube } from 'youtubei.js';
+// import { Innertube } from 'youtubei.js'; // Innertube is imported via youtube-proxy
 import { tokenManager } from './token-manager';
+import { createProxiedInnertube, proxyManager } from './youtube-proxy';
 
 export const extractVideoId = (url: string): string | null => {
   try {
@@ -119,7 +120,7 @@ export const getVideoInfo = async (url: string, clientTokens?: { visitorData?: s
       }
     }
 
-    // Create Innertube instance with enhanced configuration for Vercel
+    // Create Innertube instance with enhanced configuration and proxy support
     const innertube = await retryWithBackoff(async () => {
       const config: Record<string, unknown> = {
         visitor_data: tokens.visitorData,
@@ -133,7 +134,12 @@ export const getVideoInfo = async (url: string, clientTokens?: { visitorData?: s
         config.po_token = tokens.poToken;
       }
       
-      return await Innertube.create(config);
+      // Use proxied Innertube to bypass IP detection
+      console.log('Creating proxied Innertube instance...');
+      const stats = proxyManager.getProxyStats();
+      console.log(`Proxy stats: ${stats.available}/${stats.total} available proxies`);
+      
+      return await createProxiedInnertube(config);
     });
     
     console.log('Making getBasicInfo request for video ID:', videoId);
@@ -209,7 +215,7 @@ export const getVideoStream = async (url: string, quality?: string, clientTokens
         config.po_token = tokens.poToken;
       }
       
-      return await Innertube.create(config);
+      return await createProxiedInnertube(config);
     });
     
     const info = await retryWithBackoff(async () => {
@@ -265,7 +271,7 @@ export const getAudioStream = async (url: string, clientTokens?: { visitorData?:
         config.po_token = tokens.poToken;
       }
       
-      return await Innertube.create(config);
+      return await createProxiedInnertube(config);
     });
     
     const info = await retryWithBackoff(async () => {
