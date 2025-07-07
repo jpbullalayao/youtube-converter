@@ -34,6 +34,13 @@ export async function POST(request: NextRequest) {
     
     try {
       console.log('Attempting to fetch video info...');
+      console.log('Environment info:', {
+        nodeEnv: process.env.NODE_ENV,
+        isVercel: !!process.env.VERCEL,
+        vercelEnv: process.env.VERCEL_ENV,
+        userAgent: process.env.VERCEL_URL ? 'Vercel Environment' : 'Local Environment'
+      });
+      
       const videoInfo = await getVideoInfo(cleanUrl);
       console.log('Video info fetched successfully:', {
         title: videoInfo.title,
@@ -41,6 +48,11 @@ export async function POST(request: NextRequest) {
         thumbnailExists: !!videoInfo.thumbnail,
         duration: videoInfo.duration
       });
+      
+      // Additional validation to ensure we got proper data
+      if (!videoInfo.title || videoInfo.title === 'Unknown Title') {
+        console.warn('Warning: Video title is missing or unknown');
+      }
       
       return NextResponse.json({
         title: videoInfo.title,
